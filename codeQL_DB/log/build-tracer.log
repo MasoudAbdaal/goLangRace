@@ -1,0 +1,39 @@
+[T 14:02:00 6880] Initializing tracer.
+[T 14:02:00 6880] Initializing tags.
+[T 14:02:00 6880] CodeQL CLI version 2.16.5
+[T 14:02:00 6880] Initializing tracer.
+[T 14:02:00 6880] Initializing tags.
+[T 14:02:00 6880] Allocated ID 8094CA8B00001AE0_0000000000000001 (parent )
+[T 14:02:00 6880] ==== Candidate to intercept: D:\Apps\codeql\tools\win64\runner.exe (14200) ====
+[T 14:02:00 6880] Executing the following tracer actions:
+[T 14:02:00 6880] Tracer actions:
+[T 14:02:00 6880] pre_invocations(0)
+[T 14:02:00 6880] post_invocations(0)
+[T 14:02:00 6880] trace_languages(1): [go]
+[T 14:02:00 14200] Initializing tracer.
+[T 14:02:00 14200] Initializing tags.
+[T 14:02:00 14200] ID set to 8094CA8B00001AE0_0000000000000001 (parent root)
+[T 14:02:00 14200] Allocated ID A0FE2A9200003778_0000000000000001 (parent 8094CA8B00001AE0_0000000000000001)
+[T 14:02:00 14200] ==== Candidate to intercept: C:\Windows\System32\cmd.exe (7268) ====
+[T 14:02:00 14200] Executing the following tracer actions:
+[T 14:02:00 14200] Tracer actions:
+[T 14:02:00 14200] pre_invocations(0)
+[T 14:02:00 14200] post_invocations(0)
+[T 14:02:00 14200] trace_languages(1): [go]
+[T 14:02:00 7268] Initializing tracer.
+[T 14:02:00 7268] Initializing tags.
+[T 14:02:00 7268] ID set to A0FE2A9200003778_0000000000000001 (parent 8094CA8B00001AE0_0000000000000001)
+[T 14:02:00 7268] Allocated ID 1950714700001C64_0000000000000001 (parent A0FE2A9200003778_0000000000000001)
+[T 14:02:00 7268] ==== Candidate to intercept: D:\Apps\codeql\go\tools\win64\go-autobuilder.exe (9320) ====
+[T 14:02:00 7268] Lua: === Intercepted call to d:\apps\codeql\go\tools\win64\go-autobuilder.exe ===
+[T 14:02:00 7268] Lua: Disabling tracing for language go.
+[T 14:02:00 7268] Executing the following tracer actions:
+[T 14:02:00 7268] Tracer actions:
+[T 14:02:00 7268] pre_invocations(0)
+[T 14:02:00 7268] post_invocations(0)
+[T 14:02:00 7268] trace_languages(0): []
+[T 14:02:00 9320] Initializing tracer.
+[T 14:02:00 9320] Initializing tags.
+[T 14:02:00 9320] ID set to 1950714700001C64_0000000000000001 (parent A0FE2A9200003778_0000000000000001)
+[T 14:02:00 9320] Skipping tracer hook installation due to rpc being absent, or it being disabled.
+

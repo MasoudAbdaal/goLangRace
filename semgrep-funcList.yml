@@ -1,0 +1,10 @@
+rules:
+  - id: fmt-print
+    languages:
+      - go
+    message: "Just Fprintf"
+    patterns:
+      - pattern: |
+          fmt.Fprintf(...)
+      - pattern: |
+          fmt.Fprintf(...)
