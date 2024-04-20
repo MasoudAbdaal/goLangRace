@@ -1,38 +1,19 @@
 package main
 
 import (
-	"fmt"
+	"goLangRace/APIs"
 	"net/http"
-	"strconv"
-	"time"
+
+	"github.com/gorilla/mux"
 )
 
 func main() {
-	http.HandleFunc("/", rootHandler)
-	http.ListenAndServe(":8585", nil)
-}
+	r := mux.NewRouter()
+	r.HandleFunc("/scenario_1", APIs.TransferHandler)
 
-var accountBalance int = 100
+	r.HandleFunc("/scenario_2/login", APIs.LoginHandler).Methods("POST")
+	r.HandleFunc("/scenario_2/bank_balance", APIs.GetBalanceHandler).Methods("GET")
+	r.HandleFunc("/scenario_2/private", APIs.GetAllUsersHandler).Methods("GET")
 
-func rootHandler(w http.ResponseWriter, r *http.Request) {
-	inputQuery := r.URL.Query().Get("n")
-	inputNum, err := strconv.Atoi(inputQuery)
-
-	if inputNum != 1 {
-		http.Error(w, "Your input should be 1", http.StatusBadRequest)
-		return
-	}
-
-	if err == nil {
-		fmt.Printf("accountBalance: %d\n", accountBalance)
-	}
-
-	accountBalance += inputNum //Account transfer operations
-	fmt.Fprintf(w, "User Account Balance: %d \n", accountBalance)
-	time.Sleep(2 * time.Millisecond) //Submit to DB
-	accountBalance = 100             //Example to integrity check function operations!
-
-}
-func hello() {
-	fmt.Println("HELLO WORLDS")
+	http.ListenAndServe(":8585", r)
 }
