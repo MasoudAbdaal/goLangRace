@@ -2,7 +2,9 @@ package APIs
 
 import (
 	"encoding/json"
+	"goLangRace/Utils"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/sessions"
 )
@@ -13,14 +15,28 @@ const sessionName = "BusinessLogicFlaws_+_RaceConditions"
 
 const sessionMaxAge = 1000 //seconds
 
-type User struct {
+type Auth struct {
 	Username string `json:"UsernamE"`
 	Password string `json:"PassworD"`
 }
 
+type User struct {
+	GUID     string `json:"guid"`
+	IsActive bool   `json:"isActive"`
+	Balance  string `json:"balance"`
+	Picture  string `json:"picture"`
+	Age      int    `json:"age"`
+	EyeColor string `json:"eyeColor"`
+	Name     string `json:"name"`
+	Gender   string `json:"gender"`
+	Company  string `json:"company"`
+	Email    string `json:"email"`
+	Phone    string `json:"phone"`
+}
+
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
-	var credential User
+	var credential Auth
 
 	err := json.NewDecoder(r.Body).Decode(&credential)
 	if err != nil {
@@ -28,27 +44,34 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	session, _ := store.Get(r, sessionName)
+	session, err := store.Get(r, sessionName)
+	if err != nil {
 
-	if (session.Values["Connection-String"].(string) == "BANK_DB-ADMIN-CONNECTION_STRING") ||
-		(credential.Username == "Admin" && credential.Password == "hard@dminP@$$w0rd") {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-		session.Options.MaxAge = session.Options.MaxAge + 99999
-		session.Values["Role"] = "Admin"
+	if connString, ok := session.Values["Connection-String"].(string); ok {
+		if _, ok := session.Values["Role"].(string); ok {
 
-		err = session.Save(r, w)
-		if err != nil {
-			http.Error(w, err.Error()+"\n Try again....", http.StatusInternalServerError)
-			return
+			if connString == "BANK_DB-ADMIN-CONNECTION_STRING" {
+
+				Utils.AdminSession(w, r, session)
+
+			}
+
 		}
 
-		http.Redirect(w, r, "/scenario_2/private", http.StatusPermanentRedirect)
-		return
+	}
+
+	if credential.Username == "Admin" && credential.Password == "hard@dminP@$$w0rd" {
+
+		Utils.AdminSession(w, r, session)
 	}
 
 	if credential.Username == "regular_user" && credential.Password == "password" {
 
-		session, err := store.New(r, "User-Session")
+		session, err := store.New(r, sessionName)
 
 		if err != nil {
 
@@ -60,11 +83,14 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		session.Values["Role"] = "Simple User"
 		session.Values["Connection-String"] = "REGULAR_ConnectionString"
 
+		Utils.SaveSession(w, r, session)
+
 	}
 
 }
 
 func GetBalanceHandler(w http.ResponseWriter, r *http.Request) {
+
 	//if (!session)
 	// 401 un-authorized()
 
@@ -90,18 +116,19 @@ func GetAllUsersHandler(w http.ResponseWriter, r *http.Request) {
 
 	if session.Values["Role"].(string) == "Admin" {
 
-		user := User{
-			Username: "User1",
-			Password: "C0mpl3xP@$$2-dd0",
-		}
+		jsonData, err := os.ReadFile(".\\usersData.json")
 
-		jsonData, err := (json.Marshal(user))
+		if err == nil {
+			var users []User
+			if err := json.Unmarshal(jsonData, &users); err == nil {
+				if responseData, err := json.Marshal(users); err == nil {
 
-		if err != nil {
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusOK)
-			w.Write(jsonData)
-			return
+					w.Header().Set("Content-Type", "application/json")
+					w.WriteHeader(http.StatusOK)
+					w.Write(responseData)
+					return
+				}
+			}
 		}
 
 		http.Error(w, "Failed while doing some administration oprations!", http.StatusAlreadyReported)
