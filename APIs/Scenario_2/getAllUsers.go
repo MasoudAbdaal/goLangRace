@@ -3,20 +3,21 @@ package APIs
 import (
 	"encoding/json"
 	en "goLangRace/Entities"
+	"goLangRace/Utils"
 	"net/http"
 	"os"
 )
 
 func GetAllUsersHandler(w http.ResponseWriter, r *http.Request) {
 
-	session, err := store.Get(r, sessionName)
+	session, err := Utils.GetSession(r)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	if session.Values["Role"].(string) == "Admin" {
+	if session.Values["UserID"].(string) == "0" {
 
 		jsonData, err := os.ReadFile(".\\usersData.json")
 
@@ -32,8 +33,12 @@ func GetAllUsersHandler(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		}
-
 		http.Error(w, "Failed while doing some administration oprations!", http.StatusAlreadyReported)
+		return
+	} else {
+
+		http.Error(w, "Get out of here!", http.StatusUnauthorized)
+		return
 	}
 
 }
