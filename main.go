@@ -16,5 +16,5 @@ func main() {
 	r.HandleFunc("/scenario_2/bank_balance", Scenario_2.GetBalanceHandler).Methods("GET")
 	r.HandleFunc("/scenario_2/private", Scenario_2.GetAllUsersHandler).Methods("GET")
 
-	http.ListenAndServe(":8585", r)
+	http.ListenAndServeTLS(":8585", "./server.crt", "server.key", r)
 }
