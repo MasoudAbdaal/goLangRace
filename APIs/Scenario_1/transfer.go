@@ -43,4 +43,5 @@ func TransferHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Recieved Request Body:\n %s", body)
 	}
 	defer r.Body.Close()
+	// test signed commit
 }
