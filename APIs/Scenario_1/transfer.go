@@ -46,4 +46,5 @@ func TransferHandler(w http.ResponseWriter, r *http.Request) {
 	// test signed commit
 	// test signed commit
 	// test signed commit
+	// test signed commit
 }
